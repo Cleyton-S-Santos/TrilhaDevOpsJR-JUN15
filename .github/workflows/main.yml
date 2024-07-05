@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  test:
+  check-test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -24,8 +24,12 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    needs: test
+    needs: check-test
     steps:
+      - name: Use Node.js 21.x
+        uses: actions/setup-node@v2
+        with:
+          node-version: 21.x
       - name: Checkout code
         uses: actions/checkout@v2
 
@@ -35,6 +39,7 @@ jobs:
       - name: Build and Deploy
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.DEV_NETLIFY_SITE_ID }}
         run: |
           npm install
           npm run build
