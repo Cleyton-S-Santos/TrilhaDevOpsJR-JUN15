@@ -22,6 +22,27 @@ jobs:
       - name: Run tests
         run: npm run test
 
+  link-site:
+    runs-on: ubuntu-latest
+    needs: check-test
+    steps:
+      - name: Install Netlify CLI
+        run: npm install netlify-cli -g
+
+      - name: Use Node.js 21.x
+        uses: actions/setup-node@v2
+        with:
+          node-version: 21.x
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+        
+      - name: Link directory to Netlify site
+        run: netlify link --id $NETLIFY_SITE_ID --name desafio-devops --auth $NETLIFY_AUTH_TOKEN
+        env:
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+
   deploy:
     runs-on: ubuntu-latest
     needs: check-test
@@ -35,12 +56,6 @@ jobs:
 
       - name: Install Netlify CLI
         run: npm install netlify-cli -g
-
-      - name: Link directory to Netlify site
-        run: netlify link --id $NETLIFY_SITE_ID --name desafio-devops --auth $NETLIFY_AUTH_TOKEN
-        env:
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
 
       - name: Deploy to Netlify
         env:
