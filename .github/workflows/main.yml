@@ -37,7 +37,7 @@ jobs:
         run: npm install netlify-cli -g
 
       - name: Link directory to Netlify site
-        run: netlify link --site $NETLIFY_SITE_ID --dir build
+        run: netlify link --id $NETLIFY_SITE_ID --name desafio-devops --dir build
         env:
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
 
