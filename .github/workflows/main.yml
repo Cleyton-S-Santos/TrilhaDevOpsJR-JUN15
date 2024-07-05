@@ -32,6 +32,11 @@ jobs:
           node-version: 21.x
       - name: Checkout code
         uses: actions/checkout@v2
+      
+      - name: Authenticate with Netlify
+        run: netlify auth:token add $NETLIFY_AUTH_TOKEN
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
 
       - name: Install Netlify CLI
         run: npm install netlify-cli -g
@@ -40,6 +45,7 @@ jobs:
         run: netlify link --id $NETLIFY_SITE_ID --name desafio-devops
         env:
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
 
       - name: Deploy to Netlify
         env:
