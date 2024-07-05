@@ -1,4 +1,4 @@
-name: Development workflow
+name: CI/CD workflow
 
 on:
   push:
@@ -13,11 +13,11 @@ jobs:
         uses: actions/checkout@v1
 
       - name: Use Node.js 21.x
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v2
         with:
           node-version: 21.x
 
-      - run: npm i
+      - run: npm install
 
       - name: Run tests
         run: npm run test
@@ -30,7 +30,7 @@ jobs:
         uses: actions/checkout@v1
 
       - name: Use Node.js 21.x
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v2
         with:
           node-version: 21.x
 
@@ -57,11 +57,13 @@ jobs:
           name: build
           path: build
 
-      - name: Deploy to netlify
+      - name: Deploy to Netlify
         uses: netlify/actions/cli@master
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.DEV_NETLIFY_SITE_ID }}
         with:
           args: deploy --dir=build --prod
-          secrets: '["NETLIFY_AUTH_TOKEN", "NETLIFY_SITE_ID"]'
+          secrets: |
+            NETLIFY_AUTH_TOKEN
+            NETLIFY_SITE_ID
